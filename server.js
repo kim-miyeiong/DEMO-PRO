@@ -17,7 +17,7 @@ dotenv.config();
 const app = express();
 const PORT = Number.parseInt(process.env.PORT || '3000', 10);
 const HOST = process.env.HOST || '0.0.0.0';
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === 'production' || Boolean(process.env.VERCEL);
 
 app.use(cors());
 app.use(express.json());
@@ -45,8 +45,10 @@ if (!isProduction) {
 const connected = await connectDB();
 if (connected) {
   await seed();
-  await initRealtime({ Book, Order, CartItem });
-  console.log('Real-time streams initialized');
+  if (!process.env.VERCEL) {
+    await initRealtime({ Book, Order, CartItem });
+    console.log('Real-time streams initialized');
+  }
 } else {
   console.warn('MongoDB not available - API requires MongoDB');
 }
