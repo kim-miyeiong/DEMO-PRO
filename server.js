@@ -51,6 +51,10 @@ if (connected) {
   console.warn('MongoDB not available - API requires MongoDB');
 }
 
-app.listen(PORT, HOST, () => {
-  console.log(`Server running on http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`);
-});
+export default app;
+
+if (!process.env.VERCEL) {
+  app.listen(PORT, HOST, () => {
+    console.log(`Server running on http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`);
+  });
+}
